@@ -45,16 +45,18 @@ func search(q string) (*Response, error) {
 	return response, nil
 }
 
-func main() {
+func init() {
 	if len(os.Args) < 2 {
 		log.Fatal("you have to enter a query")
 	}
-	query := os.Args[1]
+}
+
+func main() {
 	tmpl, err := template.New("results").Parse(RESULT_TEMPLATE)
 	if err != nil {
 		log.Fatal(err)
 	}
-	response, err := search(query)
+	response, err := search(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
 	}
