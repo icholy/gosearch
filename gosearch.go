@@ -47,7 +47,7 @@ func search(q string) (*Response, error) {
 
 func init() {
 	if len(os.Args) < 2 {
-		log.Fatal("you have to enter a query")
+		log.Fatal("usage: gosearch <query>")
 	}
 }
 
