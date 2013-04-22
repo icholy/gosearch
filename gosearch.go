@@ -37,9 +37,10 @@ func search(q string) (*Response, error) {
 	if err = decoder.Decode(response); err != nil {
 		return nil, err
 	}
+	noSynopsis := "<no description>"
 	for _, result := range response.Results {
 		if result.Synopsis == "" {
-			result.Synopsis = "<no description>"
+			result.Synopsis = noSynopsis
 		}
 	}
 	return response, nil
