@@ -27,7 +27,7 @@ type Response struct {
 	Results []*Result `json:"results"`
 }
 
-func Search(q string) (*Response, error) {
+func search(q string) (*Response, error) {
 	res, err := http.Get("http://api.godoc.org/search?q=" + q)
 	if err != nil {
 		return nil, err
@@ -54,7 +54,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	response, err := Search(query)
+	response, err := search(query)
 	if err != nil {
 		log.Fatal(err)
 	}
