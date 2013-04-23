@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"text/template"
 )
@@ -28,7 +29,7 @@ type Response struct {
 }
 
 func search(q string) (*Response, error) {
-	res, err := http.Get("http://api.godoc.org/search?q=" + q)
+	res, err := http.Get("http://api.godoc.org/search?" + url.Values{"q": {q}}.Encode())
 	if err != nil {
 		return nil, err
 	}
