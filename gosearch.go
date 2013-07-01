@@ -6,18 +6,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"text/template"
+	"path/filepath"
 )
-
-const RESULT_TEMPLATE = `
-  Results from GoDoc.org
-  ----------------------
-
-{{range .Results}}  {{.Path}}
-    {{.Synopsis}}
-
-{{end}}
-`
 
 type Result struct {
 	Path     string `json:"path"`
@@ -28,7 +18,12 @@ type Response struct {
 	Results []*Result `json:"results"`
 }
 
-func search(q string) (*Response, error) {
+func (r *Result) name() string {
+	_, name := filepath.Split(r.Path)
+	return name
+}
+
+func search(q string) ([]string, error) {
 	res, err := http.Get("http://api.godoc.org/search?" + url.Values{"q": {q}}.Encode())
 	if err != nil {
 		return nil, err
@@ -39,12 +34,17 @@ func search(q string) (*Response, error) {
 		return nil, err
 	}
 	noSynopsis := "<no description>"
+	paths := make([]string, 0, 1)
 	for _, result := range response.Results {
+		if result.name() != q { 
+			continue 
+		}
 		if result.Synopsis == "" {
 			result.Synopsis = noSynopsis
 		}
+		paths = append(paths, result.Path)
 	}
-	return response, nil
+	return paths, nil
 }
 
 func init() {
@@ -54,13 +54,11 @@ func init() {
 }
 
 func main() {
-	tmpl, err := template.New("results").Parse(RESULT_TEMPLATE)
+	paths, err := search(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
 	}
-	response, err := search(os.Args[1])
-	if err != nil {
-		log.Fatal(err)
+	if err := json.NewEncoder(os.Stdout).Encode(&paths); err != nil {
+		log.Fatal(err)	
 	}
-	tmpl.Execute(os.Stdout, response)
 }
