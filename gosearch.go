@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sort"
 	"text/template"
 )
 
@@ -30,6 +31,18 @@ type Result struct {
 
 type Response struct {
 	Results []*Result `json:"results"`
+}
+
+func (r Response) SortByStars() {
+	sort.Slice(r.Results, func(i, j int) bool {
+		return r.Results[i].Stars > r.Results[j].Stars
+	})
+}
+
+func (r Response) SortByImportCount() {
+	sort.Slice(r.Results, func(i, j int) bool {
+		return r.Results[i].ImportCount > r.Results[j].ImportCount
+	})
 }
 
 func search(q string) (*Response, error) {
