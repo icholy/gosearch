@@ -13,17 +13,19 @@ const RESULT_TEMPLATE = `
   Results from GoDoc.org
   ----------------------
 
-{{range .Results}}  {{.Path}} ({{.Stars}} stars)
+{{range .Results}}  {{.Path}} ({{.Stars}} stars, {{.ImportCount}} imports)
     {{.Synopsis}}
 
 {{end}}
 `
 
 type Result struct {
-	Name     string `json:"name"`
-	Path     string `json:"path"`
-	Synopsis string `json:"synopsis"`
-	Stars    int    `json:"stars"`
+	Name        string  `json:"name"`
+	Path        string  `json:"path"`
+	Synopsis    string  `json:"synopsis"`
+	Stars       int     `json:"stars"`
+	Score       float64 `json:"score"`
+	ImportCount int     `json:"import_count"`
 }
 
 type Response struct {
