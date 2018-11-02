@@ -59,12 +59,9 @@ func search(q string) (*Response, error) {
 }
 
 func formatURL(query string) string {
-	u, err := url.Parse("http://api.godoc.org/search")
-	if err != nil {
-		panic(err)
-	}
-	u.Query().Add("q", query)
-	return u.String()
+	values := make(url.Values)
+	values.Add("q", query)
+	return "http://api.godoc.org/search?" + values.Encode()
 }
 
 func fetchJSON(url string, v interface{}) error {
