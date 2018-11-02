@@ -13,7 +13,7 @@ const RESULT_TEMPLATE = `
   Results from GoDoc.org
   ----------------------
 
-{{range .Results}}  {{.Path}}
+{{range .Results}}  {{.Path}} ({{.Stars}} stars)
     {{.Synopsis}}
 
 {{end}}
