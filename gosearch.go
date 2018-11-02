@@ -20,8 +20,10 @@ const RESULT_TEMPLATE = `
 `
 
 type Result struct {
+	Name     string `json:"name"`
 	Path     string `json:"path"`
 	Synopsis string `json:"synopsis"`
+	Stars    int    `json:"stars"`
 }
 
 type Response struct {
