@@ -33,13 +33,8 @@ type Response struct {
 }
 
 func search(q string) (*Response, error) {
-	res, err := http.Get("http://api.godoc.org/search?" + url.Values{"q": {q}}.Encode())
-	if err != nil {
-		return nil, err
-	}
-	decoder := json.NewDecoder(res.Body)
-	response := new(Response)
-	if err = decoder.Decode(response); err != nil {
+	var response Response
+	if err := fetchJSON(formatURL(q), &response); err != nil {
 		return nil, err
 	}
 	for _, result := range response.Results {
@@ -47,7 +42,25 @@ func search(q string) (*Response, error) {
 			result.Synopsis = "<no description>"
 		}
 	}
-	return response, nil
+	return &response, nil
+}
+
+func formatURL(query string) string {
+	u, err := url.Parse("http://api.godoc.org/search")
+	if err != nil {
+		panic(err)
+	}
+	u.Query().Add("q", query)
+	return u.String()
+}
+
+func fetchJSON(url string, v interface{}) error {
+	res, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	return json.NewDecoder(res.Body).Decode(v)
 }
 
 func init() {
