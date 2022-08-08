@@ -1,4 +1,4 @@
-# GoSearch
+# GoSearch (Deprecated)
 
 ``` sh
 $ go get github.com/icholy/gosearch
